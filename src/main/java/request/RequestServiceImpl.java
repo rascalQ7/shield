@@ -37,7 +37,6 @@ public class RequestServiceImpl implements RequestService {
                 if (profile.getUrls().contains(request.getUrl())) {
                   this.statisticsService.logAllow(request);
                 } else {
-                  this.statisticsService.logBlock(request);
                   this.statisticsService.logQuarantine(request);
                 }
               }

@@ -101,8 +101,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     for (Map.Entry<String, Integer> action : this.actionsStatistics.entrySet()) {
       if (action.getKey().startsWith(event.get(MODEL_NAME_FIELD).asText())
           && action.getKey().endsWith(actionType)) {
-        this.actionsStatistics.put(action.getKey(), 0);
         count += this.actionsStatistics.get(action.getKey());
+        this.actionsStatistics.put(action.getKey(), 0);
       }
     }
 
