@@ -6,7 +6,6 @@ import profile.ProfileService;
 import profile.ProfileServiceImpl;
 import profile.ProfilesCacheService;
 import profile.ProfilesCacheServiceImpl;
-import request.RequestBatch;
 import request.RequestService;
 import request.RequestServiceImpl;
 import statistics.StatisticsService;
@@ -21,12 +20,10 @@ public class App {
     ProfileService profileService = new ProfileServiceImpl(profilesCacheService, statisticsService);
     RequestService requestService = new RequestServiceImpl(profilesCacheService, statisticsService);
 
+    var requestBatch = new RequestBatch(profileService, requestService);
+
     try (Stream<String> eventsStream = Files.lines(Paths.get("src/main/resources/input.json"))) {
-      new RequestBatch(
-          eventsStream,
-          profileService,
-          requestService
-      ).execute();
+      requestBatch.execute(eventsStream);
     } catch (IOException e) {
       e.printStackTrace();
     }

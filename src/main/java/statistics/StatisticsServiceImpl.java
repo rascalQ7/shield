@@ -26,7 +26,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
   @Override
   public void logBlock(Request request) {
-    this.protectedDevices.add(request.deviceId());
+    this.protectedDevices.add(request.getDeviceId());
     logAction(request, BLOCK);
   }
 
@@ -37,8 +37,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
   @Override
   public void logQuarantine(Request request) {
-    this.protectedDevices.add(request.deviceId());
-    this.suspiciousDevices.add(request.deviceId());
+    this.protectedDevices.add(request.getDeviceId());
+    this.suspiciousDevices.add(request.getDeviceId());
 
     logAction(request, BLOCK, true);
   }
@@ -119,16 +119,16 @@ public class StatisticsServiceImpl implements StatisticsService {
   }
 
   private void collectRequestAction(Request request, String action, boolean quarantine) {
-    this.actions.add("{\"request_id\": \"" + request.requestId() + "\", \"action\": "
+    this.actions.add("{\"request_id\": \"" + request.getRequestId() + "\", \"action\": "
         + "\"" + action + "\"}");
     if (quarantine) {
-      this.actions.add("{\"device_id\": \"" + request.deviceId() + "\", \"action\": "
+      this.actions.add("{\"device_id\": \"" + request.getDeviceId() + "\", \"action\": "
           + "\"quarantine\"}");
     }
   }
 
   private void collectStatistic(Request request, String action) {
-    var actionId = request.modelName() + request.url() + action;
+    var actionId = request.getModelName() + request.getUrl() + action;
     if (this.actionsStatistics.containsKey(actionId)) {
       this.actionsStatistics.put(actionId, this.actionsStatistics.get(actionId) + 1);
     } else {

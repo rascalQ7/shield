@@ -20,25 +20,28 @@ public class RequestServiceImpl implements RequestService {
 
   /**
    * Looks for profile in the cache, if profile exists handles request according to policy
+   *
    * @param request - http request from specific device
    */
   @Override
   public void verify(Request request) {
-    this.profilesCache.getProfile(request.modelName())
+    this.profilesCache.getProfile(request.getModelName())
         .ifPresent(profile -> {
-          if (profile.getPolicyType() == PolicyType.ALLOW) {
-            if (profile.getUrls().contains(request.url())) {
-              this.statisticsService.logBlock(request);
-            } else {
-              this.statisticsService.logAllow(request);
+              if (profile.getPolicyType() == PolicyType.ALLOW) {
+                if (profile.getUrls().contains(request.getUrl())) {
+                  this.statisticsService.logBlock(request);
+                } else {
+                  this.statisticsService.logAllow(request);
+                }
+              } else if (profile.getPolicyType() == PolicyType.BLOCK) {
+                if (profile.getUrls().contains(request.getUrl())) {
+                  this.statisticsService.logAllow(request);
+                } else {
+                  this.statisticsService.logBlock(request);
+                  this.statisticsService.logQuarantine(request);
+                }
+              }
             }
-          } else if (profile.getPolicyType() == PolicyType.BLOCK) {
-            if (profile.getUrls().contains(request.url())) {
-              this.statisticsService.logAllow(request);
-            } else {
-              this.statisticsService.logQuarantine(request);
-            }
-          }
-        });
+        );
   }
 }

@@ -1,30 +1,27 @@
-package request;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Objects;
 import java.util.stream.Stream;
 import profile.Profile;
 import profile.ProfileService;
+import request.Request;
+import request.RequestService;
+import request.RequestType;
 import utils.JsonParser;
 
 /**
  * Events router to service for further execution
  */
-public record RequestBatch(Stream<String> events,
-                           ProfileService profileService,
+public record RequestBatch(ProfileService profileService,
                            RequestService requestService) {
 
   /**
-   * @param events         - stream of events
    * @param profileService - service for profile events handling
    * @param requestService - service for request events handling
    */
   public RequestBatch(
-      Stream<String> events,
       ProfileService profileService,
       RequestService requestService
   ) {
-    this.events = Objects.requireNonNull(events);
     this.profileService = Objects.requireNonNull(profileService);
     this.requestService = Objects.requireNonNull(requestService);
   }
@@ -32,9 +29,8 @@ public record RequestBatch(Stream<String> events,
   /**
    * handle events
    */
-  public void execute() {
-    this.events
-        .map(JsonParser::toJsonNode)
+  public void execute(Stream<String> events) {
+    events.map(JsonParser::toJsonNode)
         .forEach(this::executeEvent);
   }
 
