@@ -33,20 +33,10 @@ public class Profile {
     return urls;
   }
 
-  public void setUrlsFromEvent(JsonNode event) {
+  protected void setUrlsFromEvent(JsonNode event) {
     this.urls = switch (this.policyType) {
       case ALLOW -> JsonParser.extractList((ArrayNode) event.get("blacklist"));
       case BLOCK -> JsonParser.extractList((ArrayNode) event.get("whitelist"));
     };
-  }
-
-  //TODO
-  @Override
-  public String toString() {
-    return "Profile{" +
-        "modelName='" + modelName + '\'' +
-        ", policyType=" + policyType +
-        ", urls=" + urls +
-        '}';
   }
 }
