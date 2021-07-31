@@ -1,3 +1,6 @@
+### Prerequisites:
+Java 16
+
 ### Application entry point:
 App class main method
 
